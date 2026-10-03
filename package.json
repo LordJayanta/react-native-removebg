@@ -5,6 +5,9 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "build",
     "src",
@@ -51,9 +54,6 @@
   "author": "LordJayanta <techie.jayanta@gmail.com> (https://github.com/LordJayanta)",
   "license": "MIT",
   "homepage": "https://github.com/LordJayanta/react-native-removebg#readme",
-  "publishConfig": {
-    "access": "public"
-  },
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@types/jest": "^29.2.1",
