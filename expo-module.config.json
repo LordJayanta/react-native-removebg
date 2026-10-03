@@ -1,0 +1,10 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["ReactNativeRemoveBgModule"],
+    "podspecPath": "ios/ReactNativeRemoveBg.podspec"
+  },
+  "android": {
+    "modules": ["expo.modules.removebg.ReactNativeRemoveBgModule"]
+  }
+}

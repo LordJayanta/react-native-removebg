@@ -1,0 +1,75 @@
+{
+  "name": "react-native-removebg",
+  "version": "0.1.0",
+  "description": "On-device background removal for iOS and Android, built on Apple Vision and Google ML Kit. No uploads, no API keys.",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "build",
+    "src",
+    "ios",
+    "android/build.gradle",
+    "android/src/main",
+    "expo-module.config.json",
+    "*.podspec",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node internal/module_scripts/build.js",
+    "clean": "node internal/module_scripts/clean.js",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "prepare": "node internal/module_scripts/prepare.js",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "expo",
+    "expo-module",
+    "react-native",
+    "ios",
+    "android",
+    "background-removal",
+    "remove-background",
+    "cutout",
+    "image-processing",
+    "on-device",
+    "vision",
+    "ml-kit",
+    "segmentation",
+    "subject-segmentation",
+    "transparent-background"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LordJayanta/react-native-removebg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LordJayanta/react-native-removebg/issues"
+  },
+  "author": "LordJayanta <techie.jayanta@gmail.com> (https://github.com/LordJayanta)",
+  "license": "MIT",
+  "homepage": "https://github.com/LordJayanta/react-native-removebg#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@types/jest": "^29.2.1",
+    "@types/react": "~19.2.2",
+    "babel-preset-expo": "~57.0.8",
+    "eslint": "~9.39.4",
+    "eslint-config-universe": "^15.0.3",
+    "expo": "~57.0.26",
+    "jest": "^29.7.0",
+    "jest-expo": "~57.0.5",
+    "prettier": "^3.0.0",
+    "typescript": "~6.0.3"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}

@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <!--
+      Asks Google Play services to download the subject-segmentation model right
+      after install so that removeBackground() can run offline. Play only does
+      this automatically for builds installed from the store; otherwise the model
+      is fetched on the first call, and the bundled selfie model takes over until
+      it arrives.
+    -->
+    <meta-data
+      android:name="com.google.mlkit.vision.DEPENDENCIES"
+      android:value="subject_segment" />
+  </application>
+</manifest>
