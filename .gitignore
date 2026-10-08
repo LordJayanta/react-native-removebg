@@ -1,10 +1,11 @@
 # Build output is COMMITTED on purpose.
 #
-# Consumers install this package straight from a git URL, and package managers
-# differ on whether they run a dependency's `prepare` script: npm does, but bun
-# blocks dependency lifecycle scripts unless the user opts in with
-# `bun pm trust`. If build/ were gitignored, `main: build/index.js` would fail
-# to resolve on bun and the package would be unusable.
+# This package declares no `prepare`/`postinstall` hook, so consumers get
+# `build/` straight from the git checkout. That is deliberate: pnpm hard-errors
+# on git deps that need unapproved build scripts (ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED),
+# and bun blocks dependency lifecycle scripts unless the user opts in with
+# `bun pm trust`. A `prepare` hook would also force every consumer to download
+# this package's devDependencies just to run `tsc`.
 #
 # To change the sources:
 #   1. edit src/
