@@ -24,7 +24,6 @@
     "clean": "node internal/module_scripts/clean.js",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
-    "prepare": "node internal/module_scripts/prepare.js",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "keywords": [

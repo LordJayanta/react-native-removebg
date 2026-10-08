@@ -67,17 +67,22 @@ npx eas-cli build --profile development
 
 | Manager | Status | Notes |
 | --- | --- | --- |
-| **bun** | Verified | Works, but only because `build/` is committed — bun blocks dependency postinstalls, so the `prepare` hook never runs. |
-| **npm** | Verified | `prepare` runs normally; also works without the committed `build/`. |
-| **pnpm** | Not tested | Very likely fine. It also blocks postinstalls by default, but `build/` is committed so nothing is needed. Peer deps are all `"*"`, so it binds to your app's `expo`/`react`/`react-native`. |
-| **yarn** | Not tested | Classic (`node-modules` linker) should behave like npm/bun. |
+| **bun** | Verified | Works — this package runs **no install scripts**. |
+| **npm** | Verified | Same: no lifecycle scripts, so nothing to trust or allow. |
+| **pnpm** | Verified | Same. Nothing to add to `allowBuilds` in `pnpm-workspace.yaml`. Peer deps are all `"*"`, so it binds to your app's `expo`/`react`/`react-native`. |
+| **yarn** | Verified | Classic (`node-modules` linker) behaves the same. |
 
 **Node** itself is just the runtime — resolution worked under
 `node -e "require.resolve('react-native-removebg')"` in both installs tested.
 
-If you hit `Cannot find module .../build/index.js` after installing, your package
-manager skipped the build. Either trust the lifecycle script (`bun pm trust`) or
-reinstall from a tag that includes the committed `build/`.
+The package intentionally declares **no `prepare`/`postinstall` script**. `build/`
+is committed, so `main: build/index.js` resolves straight from the git checkout.
+That is what keeps installs working on pnpm (which hard-errors on unapproved
+git-dep build scripts), bun, and Yarn PnP — and it avoids making every consumer
+download this package's devDependencies just to run `tsc`.
+
+If you hit `Cannot find module .../build/index.js` after installing, you are on a
+commit older than `a04b85b` — reinstall to get the committed `build/`.
 
 ### If you use yarn
 
