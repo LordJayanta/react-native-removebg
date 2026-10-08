@@ -9,6 +9,7 @@
     "access": "public"
   },
   "files": [
+    "app.plugin.js",
     "build",
     "src",
     "ios",

@@ -41,6 +41,19 @@ Then install:
 npx expo install
 ```
 
+And add the bundled config plugin to your app config:
+
+```json
+{
+  "expo": {
+    "plugins": ["react-native-removebg"]
+  }
+}
+```
+
+The plugin is what keeps debug builds installable alongside `expo-dev-client`
+(see [Android](#android)). There is nothing else to configure.
+
 ### Requirements
 
 | | |
@@ -102,6 +115,12 @@ nodeLinker: node-modules
 succeeds, and all module classes appear in the APK's `classes8.dex`. Autolinking
 resolves `expo.modules.removebg.ReactNativeRemoveBgModule`, and the ML Kit
 `subject_segment` auto-download entry lands in the merged `AndroidManifest.xml`.
+
+**Works with `expo-dev-client`.** `expo-dev-launcher` asks Play services to prefetch
+a different ML Kit model in debug builds, and that collides with this module's
+manifest entry. The bundled config plugin settles it — add
+`"react-native-removebg"` to `expo.plugins` and `npx expo run:android` works. Without
+the plugin, see [ML Kit manifest conflict](#ml-kit-manifest-conflict-expo-dev-client).
 
 ### iOS
 
@@ -279,6 +298,48 @@ you also added the package from git.
 ignore rule. `expo-doctor` flags this: if `modules/**/android/build.gradle` or
 `modules/**/ios/*.podspec` matches inside a nested `node_modules`, it will
 misreport that a local module's native sources are gitignored.
+
+### ML Kit manifest conflict (`expo-dev-client`)
+
+**You should not hit this** — the bundled config plugin fixes it. If your app config
+does not list `"react-native-removebg"` under `expo.plugins`, every **debug** build
+fails at `:app:processDebugMainManifest`:
+
+```
+Manifest merger failed : Attribute meta-data#com.google.mlkit.vision.DEPENDENCIES@value
+value=(barcode_ui) from [:expo-dev-launcher] AndroidManifest.xml:16:13-39
+    is also present at [:react-native-removebg] AndroidManifest.xml:18:13-44 value=(subject_segment).
+```
+
+Why: `com.google.mlkit.vision.DEPENDENCIES` is one app-wide slot. This module
+declares `subject_segment` in it; `expo-dev-launcher` declares `barcode_ui` from its
+`debug` source set. Two different values for the same `android:name` is an
+unresolvable manifest-merger conflict, and the value is *not* a list the merger will
+join — verified against AGP 9 / Gradle 9.3, both of these fail with the identical
+error, in a library manifest *and* in the app manifest:
+
+- `tools:node="merge"`
+- `tools:replace="android:value"`
+
+So `app.plugin.js` adds the entry to **your app's** manifest instead, where
+`tools:replace` is honoured, because the app outranks every library. Release builds
+were never affected: `expo-dev-launcher` declares `barcode_ui` in `debug` only.
+
+Manual equivalent, if you cannot use a config plugin (bare RN CLI, or you prefer to
+patch the manifest yourself). Remember to keep it across `expo prebuild`, which
+regenerates `android/`:
+
+```xml
+<!-- android/app/src/main/AndroidManifest.xml -->
+<meta-data
+  android:name="com.google.mlkit.vision.DEPENDENCIES"
+  android:value="subject_segment"
+  tools:replace="android:value"/>
+```
+
+If another dependency prefetches a model of its own, list it in `android:value`
+alongside `subject_segment` — the app's value replaces every library's, so anything
+missing from it is dropped from the merged manifest without any build error.
 
 ## Contributing
 
