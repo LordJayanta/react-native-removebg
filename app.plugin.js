@@ -29,5 +29,16 @@ module.exports = (config) =>
       },
     });
 
+    // Another library's declaration (expo-dev-launcher asks for `barcode_ui` from its
+    // debug source set) is invisible at config time, and this entry outranks every
+    // library, so theirs would be dropped from the merged manifest without any build
+    // error. Say so rather than let the prefetch disappear quietly.
+    console.warn(
+      `[react-native-removebg] added ${NAME}=subject_segment to the app manifest. ` +
+        'If another dependency asks Play services for an ML Kit model, list it in that ' +
+        'value too (comma separated) -- this plugin cannot see models declared by other ' +
+        'libraries.'
+    );
+
     return config;
   });

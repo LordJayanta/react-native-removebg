@@ -9,7 +9,11 @@ No uploads, no API keys, no server — segmentation runs entirely on the phone.
 
 ## Install
 
-Install straight from git:
+```sh
+npx expo install react-native-removebg
+```
+
+Or install straight from git:
 
 ```sh
 npx expo install react-native-removebg@git+https://github.com/LordJayanta/react-native-removebg.git
@@ -19,7 +23,7 @@ Pin a tag or commit for reproducible builds:
 
 ```sh
 # a tag
-npx expo install react-native-removebg@git+https://github.com/LordJayanta/react-native-removebg.git#v0.1.0
+npx expo install react-native-removebg@git+https://github.com/LordJayanta/react-native-removebg.git#v0.1.1
 
 # an exact commit
 npx expo install react-native-removebg@git+https://github.com/LordJayanta/react-native-removebg.git#abc1234
@@ -318,8 +322,10 @@ unresolvable manifest-merger conflict, and the value is *not* a list the merger 
 join — verified against AGP 9 / Gradle 9.3, both of these fail with the identical
 error, in a library manifest *and* in the app manifest:
 
-- `tools:node="merge"`
-- `tools:replace="android:value"`
+- `tools:node="merge"` is silently ignored for `android:value` on `<meta-data>`, in a
+  library manifest or the app manifest. Fails with the identical error either way.
+- `tools:replace="android:value"` is honoured only on the *highest* priority element.
+  Inside a library manifest it is ignored; in the app manifest it works.
 
 So `app.plugin.js` adds the entry to **your app's** manifest instead, where
 `tools:replace` is honoured, because the app outranks every library. Release builds

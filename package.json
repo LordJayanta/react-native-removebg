@@ -1,6 +1,6 @@
 {
   "name": "react-native-removebg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "On-device background removal for iOS and Android, built on Apple Vision and Google ML Kit. No uploads, no API keys.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
